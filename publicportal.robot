@@ -3,7 +3,9 @@ Library    String
 
 
 ***Variables***
-${locator.tenderId}                     xpath=/html/body/div[2]/div/div[2]/div/div/div/div[3]/div[3]/div/ul/li[4]
+${locator.tenderId}                     xpath=//li[contains(., 'Номер тендеру:')]
+# all furthers elements need to be reworked like above
+
 ${locator.title}                        xpath=/html/body/div[2]/div/div[1]/div/div[1]
 ${locator.description}                  xpath=/html/body/div[2]/div/div[2]/div/div/div/div[1]/div[1]/div/div/div
 ${locator.value.amount}                 xpath=/html/body/div[2]/div/div[1]/div/div[2]/div/div
@@ -29,15 +31,15 @@ ${timeout_short}     5
   [Documentation]
   ...      ${ARGUMENTS[0]} ==  username
   ...      ${ARGUMENTS[1]} ==  ${TENDER_UAID}
-  Wait Until Page Contains Element    name=sandbox     ${timeout_short}
-  Click Button    name=sandbox
-  sleep  10
-  Go To    ${USERS.users['${ARGUMENTS[0]}'].homepage}search/?tid=${ARGUMENTS[1]}
-  ${timeout_on_wait}=  Get Broker Property By Username  ${ARGUMENTS[0]}  timeout_on_wait
+  Wait Until Page Contains Element    name=tender-sandbox     ${timeout_short}
+  Click Button    name=tender-sandbox
+  sleep  ${timeout_short}
+  Click Button    № закупівлі
+  Input Text    //*[@id="blocks"]/div/input    ${ARGUMENTS[1]}
+  Sleep   ${timeout_short}
   Wait Until Page Contains    ${ARGUMENTS[1]}   10
   Capture Page Screenshot
-  # Select result from search; this locator might be moved into Variables chapter
-  Click Link    xpath=/html/body/div[2]/div[2]/div[2]/div/div[2]/div/div/div/div[1]/a
+  Click Link    /tender/${ARGUMENTS[1]}/
   Capture Page Screenshot
 
 Отримати інформацію із тендера
