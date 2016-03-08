@@ -4,42 +4,36 @@ Library    String
 
 ***Variables***
 ${locator.tenderId}                     xpath=//li[contains(., 'Номер тендеру:')]
-# all furthers elements need to be reworked like above
-
-${locator.title}                        xpath=/html/body/div[2]/div/div[1]/div/div[1]
-${locator.description}                  xpath=/html/body/div[2]/div/div[2]/div/div/div/div[1]/div[1]/div/div/div
-${locator.value.amount}                 xpath=/html/body/div[2]/div/div[1]/div/div[2]/div/div
-${locator.procuringEntity.name}         xpath=/html/body/div[2]/div/div[1]/div/div[3]/div[1]/div[1]
-${locator.tenderPeriod.startDate}       xpath=/html/body/div[2]/div/div[2]/div[1]/div/div/div[3]/div[2]/div/ul/li[1]
-${locator.tenderPeriod.endDate}         xpath=/html/body/div[2]/div/div[2]/div[1]/div/div/div[3]/div[2]/div/ul/li[2]
+${locator.title}                        xpath=//div[contains(@class, "tender--head--title col-sm-9")]
+${locator.description}                  xpath=//div[contains(@class, "tender--description--text description open")]
+${locator.value.amount}                 xpath=//li[contains(., 'Бюджет:')]
+${locator.procuringEntity.name}         xpath=//div[contains(@class, "tender--head--company")]
+${locator.tenderPeriod.startDate}       xpath=//li[contains(., 'Період уточнень:')]
+${locator.tenderPeriod.endDate}         xpath=//li[contains(., 'Подання пропозицій:')]
 ${locator.enquiryPeriod.startDate}      xpath=/html/body/div[2]/div/div[2]/div/div/div/div[3]/div[2]/div/ul/li[1]
 ${locator.enquiryPeriod.endDate}        xpath=/html/body/div[2]/div/div[2]/div/div/div/div[3]/div[2]/div/ul/li[2]
-${locator.minimalStep.amount}           xpath=/html/body/div[2]/div/div[2]/div/div/div/div[3]/div[3]/div/ul/li[3]
+${locator.minimalStep.amount}           xpath=//li[contains(., 'Мінімальний крок:')]
 
 ${timeout_short}     5
 
 *** Keywords ***
 Підготувати клієнт для користувача
-  [Arguments]  @{ARGUMENTS}
+  [Arguments]  ${username}
   [Documentation]  Відкрити браузер, створити об’єкт api wrapper, тощо
-  Log  @{ARGUMENTS}
-  Open Browser  ${USERS.users['${ARGUMENTS[0]}'].homepage}    ${USERS.users['${ARGUMENTS[0]}'].browser}
+  Open Browser  ${USERS.users['${username}'].homepage}    ${USERS.users['${username}'].browser}
   # in Suite Setup there are already whole preparation.
  
 Пошук тендера по ідентифікатору
-  [Arguments]  @{ARGUMENTS}
-  [Documentation]
-  ...      ${ARGUMENTS[0]} ==  username
-  ...      ${ARGUMENTS[1]} ==  ${TENDER_UAID}
-  Wait Until Page Contains Element    name=tender-sandbox     ${timeout_short}
-  Click Button    name=tender-sandbox
+  [Arguments]    ${username}    ${tender_uaid}
+  Wait Until Page Contains Element    name=sandbox     ${timeout_short}
+  Click Button    name=sandbox
   sleep  ${timeout_short}
   Click Button    № закупівлі
-  Input Text    //*[@id="blocks"]/div/input    ${ARGUMENTS[1]}
+  Input Text    //*[@id="blocks"]/div/input    ${tender_uaid}
   Sleep   ${timeout_short}
-  Wait Until Page Contains    ${ARGUMENTS[1]}   10
+  Wait Until Page Contains    ${tender_uaid}   10
   Capture Page Screenshot
-  Click Link    /tender/${ARGUMENTS[1]}/
+  Click Link    /tender/${tender_uaid}/
   Capture Page Screenshot
 
 Отримати інформацію із тендера
@@ -83,8 +77,8 @@ ${timeout_short}     5
 Отримати інформацію про value.amount
   ${return_value}=   Отримати текст із поля і показати на сторінці  value.amount
   #${return_value}=   Evaluate   "".join("${return_value}".split(' ')[:-3])
-  ${return_value}    Remove String    ${return_value}    ${SPACE}UAH
-  ${return_value}    Remove String    ${return_value}    ${SPACE}
+  ${return_value}    Fetch from Right    ${return_value}    \n
+  ${return_value}    Fetch from Left    ${return_value}    UAH
   ${return_value}=   Convert To Number   ${return_value}
   [return]  ${return_value}
 
