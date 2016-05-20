@@ -24,9 +24,8 @@ ${locator.tenderPeriod.endDate}                                 xpath=
 
      Set Window Size             @{USERS.users['${ARGUMENTS[0]}'].size}
      Set Window Position         @{USERS.users['${ARGUMENTS[0]}'].position}
-     
-     Wait Until Page Contains Element    name=tender-v2    20
-     Click Element                       name=tender-v2
+     Wait Until Page Contains Element     xpath=.//*[@id='buttons']/button[4]      20
+ 
 
 
 Пошук тендера по ідентифікатору
@@ -38,7 +37,6 @@ ${locator.tenderPeriod.endDate}                                 xpath=
 
     Switch browser                       ${ARGUMENTS[0]}
     Go To                                ${USERS.users['${ARGUMENTS[0]}'].homepage}
-    Click Element                       name=tender-v2
     Wait Until Page Contains Element     xpath=.//*[@id='buttons']/button[4]      10
     Click Element                        xpath=.//*[@id='buttons']/button[4]
     Wait Until Page Contains Element     xpath=.//*[@id='blocks']/div/input       10
@@ -117,5 +115,5 @@ Change_date_to_month
 Отримати посилання на аукціон для глядача
     [Arguments]  @{ARGUMENTS}
     publicportal.Пошук тендера по ідентифікатору    ${ARGUMENTS[0]}   ${ARGUMENTS[1]}
-    ${result} =    get text      xpath=.//*[@id='sticky-wrapper']//a[@target='_blank']
+    ${result} =    Get Text      xpath=.//*[@id='sticky-wrapper']//a[@target='_blank']
     [return]   ${result}
