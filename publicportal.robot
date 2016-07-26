@@ -94,7 +94,7 @@ ${locator.minimalStep.amount}       xpath=//strong[text()='Розмір міні
 
 Отримати посилання на аукціон для глядача
   [Arguments]  ${username}  ${tender_uaid}  ${url}
-  Пошук тендера по ідентифікатору  ${username}  ${tender_uaid}
+  publicportal.Пошук тендера по ідентифікатору  ${username}  ${tender_uaid}
   ${xpath}=  create_xpath  ${locator.go.to.auction}  ${tender_uaid}
   Wait Until Element Is Visible  ${xpath}  ${settings.global.timeout}
   Click Element  ${xpath}
