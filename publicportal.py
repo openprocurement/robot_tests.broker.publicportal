@@ -5,8 +5,8 @@ def parse_date_publicportal(date):
     return datetime.datetime.strptime(date, '%d-%m-%y').strftime('%m-%d-%y')
 
 
-def create_xpath(xpath, tender_uaid):
-    return xpath.format(tender_uaid)
+def insert_tender_id_into_xpath(xpath_to_change, tender_id):
+    return xpath_to_change.format(tender_id)
 
 
 def prune_amount(string):
