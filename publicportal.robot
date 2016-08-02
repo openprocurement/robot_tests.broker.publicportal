@@ -8,7 +8,7 @@ Library  publicportal.py
 
 *** Variables ***
 
-${settings.global.timeout}  60
+${settings.global.timeout}  30
 ${locator.tender.number}        xpath=//button[text()='№ закупівлі']
 ${locator.tender.search}        xpath=//*[@id="blocks"]/div/input
 ${locator.tender.title.verification}    xpath=//*[@href="/tender/{}/"]

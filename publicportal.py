@@ -11,3 +11,8 @@ def insert_tender_id_into_xpath(xpath_to_change, tender_id):
 
 def prune_amount(string):
     return round(float(string.replace(' ', '')), 2)
+
+
+def adapt_procuringEntity(tender_data):
+    tender_data['data']['procuringEntity']['name'] = u"QA"
+    return tender_data
