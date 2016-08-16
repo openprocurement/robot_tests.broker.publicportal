@@ -33,7 +33,6 @@ ${locator.auction.get.link}                 xpath=//a[text()='Подати пр�
 *** Keywords ***
 
 Підготувати клієнт для користувача
-  Set Global Variable  ${PUBLICPORTAL_MODIFICATION_DATE}  ${EMPTY}
   [Arguments]  ${username}
   [Documentation]  Відкрити браузер, створити об’єкт api wrapper, тощо
   Create WebDriver  ${users.users['${username}'].browser}  alias=${username}
@@ -50,15 +49,13 @@ ${locator.auction.get.link}                 xpath=//a[text()='Подати пр�
 
 Пошук тендера по ідентифікатору
   [Arguments]  ${username}  ${tender_uaid}
-  Set Global Variable  ${xpath}  ${EMPTY}
   Switch Browser  ${username}
   Go To  ${users.users['${username}'].homepage}
   Click Button  ${locator.tender.number}
   Input Text    ${locator.tender.search}  ${tender_uaid}
   ${xpath}=  insert_tender_id_into_xpath  ${locator.tender.id.search}  ${tender_uaid}
   Wait Until Page Contains  ${tender_uaid}  ${settings.global.timeout}  error=NO TENDER ID ON THIS PAGE
-  Sleep  5
-
+  Sleep  3   #Without sleep can't find the tender
 
 Оновити сторінку з тендером 
   [Arguments]  ${username}  ${tender_uaid} 
@@ -98,26 +95,10 @@ ${locator.auction.get.link}                 xpath=//a[text()='Подати пр�
   [Return]  ${tender.description}
 
 
-Отримати інформацію про tenderPeriod.startDate
-  Execute Javascript  window.scrollTo(0, 890)
-  ${tenderPeriod_startDate}=    Отримати текст із поля і показати на сторінці  ${locator.enquiryPeriod.endDate}
-  ${tenderPeriod_startDate}=    parse_date_publicportal  ${tenderPeriod_startDate}
-  [Return]  ${tenderPeriod_startDate}
-
-
 Отримати інформацію про tenderPeriod.endDate
   Execute Javascript    window.scrollTo(0, 890)
   ${tenderPeriod_endDate}=  Отримати текст із поля і показати на сторінці  ${locator.tenderPeriod.endDate}
   [Return]  ${tenderPeriod_endDate}
-
-
-Отримати інформацію про enquiryPeriod.startDate
-  Execute Javascript    window.scrollTo(0, 890)
-  ${enquiryPeriod_startDate}=   Отримати текст із поля і показати на сторінці   ${locator.enquiryPeriod.endDate}
-  ${enquiryPeriod_startDate}=   parse_date_publicportal     ${enquiryPeriod_startDate}
-  ${enquiryPeriod_startDate}=   subtract_from_time          ${enquiryPeriod_startDate}  20  0
-  [Return]  ${enquiryPeriod_startDate}
-
 
 Отримати інформацію про enquiryPeriod.endDate
   Execute Javascript    window.scrollTo(0, 890)
@@ -171,4 +152,12 @@ ${locator.auction.get.link}                 xpath=//a[text()='Подати пр�
 
 Отримати інформацію із предмету
   [Arguments]  ${username}  ${tender_uaid}  ${lot_id}  ${fieldname}
-  Pass Execution    | CAN'T FIND THIS INFO ON PublicPortal
+  Log       | | Поле не відображається PublicPortal (в однолотовій закупівлі)      console=yes
+
+
+Отримати інформацію про tenderPeriod.startDate
+  Log       | | Поле не відображається PublicPortal        console=yes
+
+
+Отримати інформацію про enquiryPeriod.startDate
+  Log       | | Поле не відображається PublicPortal        console=yes
